@@ -287,7 +287,9 @@ fi
 if [[ ! -e ${GITLAB_DATA_DIR}/ssh/ssh_host_rsa_key ]]; then
   # create ssh host keys and move them to the data store.
   dpkg-reconfigure openssh-server
-  mkdir -p ${GITLAB_DATA_DIR}/ssh/
+  if [[ ! -e ${GITLAB_DATA_DIR}/ssh ]]
+    mkdir -p ${GITLAB_DATA_DIR}/ssh/
+  fi
   mv /etc/ssh/ssh_host_*_key /etc/ssh/ssh_host_*_key.pub ${GITLAB_DATA_DIR}/ssh/
 fi
 # configure sshd to pick up the host keys from ${GITLAB_DATA_DIR}/ssh/
