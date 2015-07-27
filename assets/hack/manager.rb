@@ -1,5 +1,6 @@
 module Backup
   class Manager
+    require 'ruby_gpg'
     def pack
       # saving additional informations
       s = {}

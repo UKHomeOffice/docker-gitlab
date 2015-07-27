@@ -43,6 +43,7 @@ RUN chmod 755 /sbin/entrypoint.sh
 
 COPY assets/hack/manager.rb ${GITLAB_INSTALL_DIR}/lib/backup/manager.rb
 RUN chmod 755 ${GITLAB_INSTALL_DIR}/lib/backup/manager.rb
+RUN echo "gem 'ruby_gpg'" >> ${GITLAB_INSTALL_DIR}/Gemfile
 
 EXPOSE 22/tcp 80/tcp 443/tcp
 
