@@ -41,8 +41,8 @@ COPY assets/config/ ${SETUP_DIR}/config/
 COPY entrypoint.sh /sbin/entrypoint.sh
 RUN chmod 755 /sbin/entrypoint.sh
 
-COPY assets/hack/manager.rb ${GITLAB_DATA_DIR}/lib/backup/manager.rb
-RUN chmod 755 ${GITLAB_DATA_DIR}/lib/backup/manager.rb
+COPY assets/hack/manager.rb ${GITLAB_HOME}/lib/backup/manager.rb
+RUN chmod 755 ${GITLAB_HOME}/lib/backup/manager.rb
 
 EXPOSE 22/tcp 80/tcp 443/tcp
 
