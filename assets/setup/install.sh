@@ -92,6 +92,8 @@ if [[ -d ${GEM_CACHE_DIR} ]]; then
   mv ${GEM_CACHE_DIR} vendor/
   chown -R ${GITLAB_USER}:${GITLAB_USER} vendor/cache
 fi
+sudo -HEu ${GITLAB_USER} echo "gem 'ruby_gpg'" >> ${GITLAB_INSTALL_DIR}/Gemfile
+bundle install
 sudo -HEu ${GITLAB_USER} bundle install -j$(nproc) --deployment --without development test aws
 
 # make sure everything in ${GITLAB_HOME} is owned by the git user

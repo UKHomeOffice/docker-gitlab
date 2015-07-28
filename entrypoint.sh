@@ -203,11 +203,14 @@ elif [[ -n ${POSTGRESQL_PORT_5432_TCP_ADDR} ]]; then
 fi
 
 # support adding gpg pub and private keys if set
-if [[ -z ${GITLAB_BACKUP_ENCRYPTION_PUBLIC_KEY} ]]; then
-  echo ${GITLAB_BACKUP_ENCRYPTION_PUBLIC_KEY} | gpg --import 
+if [[  ${GITLAB_BACKUP_ENCRYPTION_PUBLIC_KEY} ]]; then
+  echo "${GITLAB_BACKUP_ENCRYPTION_PUBLIC_KEY}" | gpg --import
 fi
-if [[ -z ${GITLAB_BACKUP_ENCRYPTION_SECRET_KEY} ]]; then
-  echo ${GITLAB_BACKUP_ENCRYPTION_SECRET_KEY} | gpg --allow-secret-key-import --import
+if [[  ${GITLAB_BACKUP_ENCRYPTION_SECRET_KEY} ]]; then
+  echo "${GITLAB_BACKUP_ENCRYPTION_SECRET_KEY}" | gpg --allow-secret-key-import --import
+fi
+if [[  ${GITLAB_BACKUP_ENCRYPTION_UID} ]]; then
+  trust-gpg ${GITLAB_BACKUP_ENCRYPTION_UID}
 fi
 
 if [[ -z ${DB_HOST} ]]; then

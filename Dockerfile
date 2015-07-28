@@ -26,13 +26,14 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv E1DD270288B4E60
       nginx openssh-server mysql-client postgresql-client redis-tools \
       git-core ruby2.1 python2.7 python-docutils nodejs \
       libmysqlclient18 libpq5 zlib1g libyaml-0-2 libssl1.0.0 \
-      libgdbm3 libreadline6 libncurses5 libffi6 \
+      libgdbm3 libreadline6 libncurses5 libffi6 expect \
       libxml2 libxslt1.1 libcurl3 libicu52 \
  && update-locale LANG=C.UTF-8 LC_MESSAGES=POSIX \
  && locale-gen en_US.UTF-8 \
  && dpkg-reconfigure locales \
  && gem install --no-document bundler \
  && rm -rf /var/lib/apt/lists/*
+
 
 COPY assets/setup/ ${SETUP_DIR}/
 RUN bash ${SETUP_DIR}/install.sh
@@ -43,7 +44,9 @@ RUN chmod 755 /sbin/entrypoint.sh
 
 COPY assets/hack/manager.rb ${GITLAB_INSTALL_DIR}/lib/backup/manager.rb
 RUN chmod 755 ${GITLAB_INSTALL_DIR}/lib/backup/manager.rb
-RUN echo "gem 'ruby_gpg'" >> ${GITLAB_INSTALL_DIR}/Gemfile
+
+COPY trust-gpg.exp /usr/local/bin/trust-gpg
+RUN chmod +x /usr/local/bin/trust-gpg
 
 EXPOSE 22/tcp 80/tcp 443/tcp
 
