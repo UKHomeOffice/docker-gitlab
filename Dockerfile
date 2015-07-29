@@ -45,8 +45,8 @@ RUN chmod 755 /sbin/entrypoint.sh
 COPY assets/hack/manager.rb ${GITLAB_INSTALL_DIR}/lib/backup/manager.rb
 RUN chmod 755 ${GITLAB_INSTALL_DIR}/lib/backup/manager.rb
 
-COPY trust-gpg.exp /usr/local/bin/trust-gpg
-RUN chmod +x /usr/local/bin/trust-gpg
+COPY trust-gpg /sbin/trust-gpg
+RUN chmod +x /sbin/trust-gpg
 
 EXPOSE 22/tcp 80/tcp 443/tcp
 

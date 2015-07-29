@@ -42,8 +42,8 @@ GITLAB_BACKUP_EXPIRY=${GITLAB_BACKUP_EXPIRY:-}
 GITLAB_BACKUP_ENCRYPTION_ENABLED=${GITLAB_BACKUP_ENCRYPTION_ENABLED:-false}
 GITLAB_BACKUP_ENCRYPTION_PASSPHRASE=${GITLAB_BACKUP_ENCRYPTION_PASSPHRASE:-none}
 GITLAB_BACKUP_ENCRYPTION_UID=${GITLAB_BACKUP_ENCRYPTION_UID:-nobody}
-GITLAB_BACKUP_ENCRYPTION_PUBLIC_KEY=${GITLAB_BACKUP_ENCRYPTION_PUBLIC_KEY:-false}
-GITLAB_BACKUP_ENCRYPTION_SECRET_KEY=${GITLAB_BACKUP_ENCRYPTION_SECRET_KEY:-false}
+GITLAB_BACKUP_ENCRYPTION_PUBLIC_KEY=${GITLAB_BACKUP_ENCRYPTION_PUBLIC_KEY:-}
+GITLAB_BACKUP_ENCRYPTION_SECRET_KEY=${GITLAB_BACKUP_ENCRYPTION_SECRET_KEY:-}
 
 AWS_BACKUPS=${AWS_BACKUPS:-false}
 AWS_BACKUP_REGION=${AWS_BACKUP_REGION}
@@ -203,14 +203,17 @@ elif [[ -n ${POSTGRESQL_PORT_5432_TCP_ADDR} ]]; then
 fi
 
 # support adding gpg pub and private keys if set
-if [[  ${GITLAB_BACKUP_ENCRYPTION_PUBLIC_KEY} ]]; then
+if [ ${GITLAB_BACKUP_ENCRYPTION_PUBLIC_KEY:+1} ]; then
+  echo 'adding pub key'
   echo "${GITLAB_BACKUP_ENCRYPTION_PUBLIC_KEY}" | gpg --import
 fi
-if [[  ${GITLAB_BACKUP_ENCRYPTION_SECRET_KEY} ]]; then
+if [ ${GITLAB_BACKUP_ENCRYPTION_SECRET_KEY:+1} ]; then
+  echo 'adding secret key'
   echo "${GITLAB_BACKUP_ENCRYPTION_SECRET_KEY}" | gpg --allow-secret-key-import --import
 fi
-if [[  ${GITLAB_BACKUP_ENCRYPTION_UID} ]]; then
-  trust-gpg ${GITLAB_BACKUP_ENCRYPTION_UID}
+if [ ${GITLAB_BACKUP_ENCRYPTION_UID:+1} ]; then
+  echo 'trusting keys'
+  /sbin/trust-gpg "${GITLAB_BACKUP_ENCRYPTION_UID}" 6
 fi
 
 if [[ -z ${DB_HOST} ]]; then
@@ -819,25 +822,25 @@ appInit () {
       read hour min <<< ${GITLAB_BACKUP_TIME//[:]/ }
       case ${GITLAB_BACKUPS} in
         daily)
-          sudo -HEu ${GITLAB_USER} cat > /tmp/cron.${GITLAB_USER} <<EOF
+          cat > /tmp/cron.root <<EOF
 # Automatic Backups: daily
-$min $hour * * * /bin/bash -l -c 'cd ${GITLAB_INSTALL_DIR} && bundle exec rake gitlab:backup:create RAILS_ENV=${RAILS_ENV}'
+$min $hour * * * cd ${GITLAB_INSTALL_DIR} && /usr/local/bin/bundle exec rake gitlab:backup:create RAILS_ENV=${RAILS_ENV}
 EOF
           ;;
         weekly)
-          sudo -HEu ${GITLAB_USER} cat > /tmp/cron.${GITLAB_USER} <<EOF
+          cat > /tmp/cron.root <<EOF
 # Automatic Backups: weekly
-$min $hour * * 0 /bin/bash -l -c 'cd ${GITLAB_INSTALL_DIR} && bundle exec rake gitlab:backup:create RAILS_ENV=${RAILS_ENV}'
+$min $hour * * 0 cd ${GITLAB_INSTALL_DIR} && /usr/local/bin/bundle exec rake gitlab:backup:create RAILS_ENV=${RAILS_ENV}
 EOF
           ;;
         monthly)
-          sudo -HEu ${GITLAB_USER} cat > /tmp/cron.${GITLAB_USER} <<EOF
+          cat > /tmp/cron.root <<EOF
 # Automatic Backups: monthly
-$min $hour 01 * * /bin/bash -l -c 'cd ${GITLAB_INSTALL_DIR} && bundle exec rake gitlab:backup:create RAILS_ENV=${RAILS_ENV}'
+$min $hour 01 * * cd ${GITLAB_INSTALL_DIR} && /usr/local/bin/bundle exec rake gitlab:backup:create RAILS_ENV=${RAILS_ENV}
 EOF
           ;;
       esac
-      crontab -u ${GITLAB_USER} /tmp/cron.${GITLAB_USER} && rm -rf /tmp/cron.${GITLAB_USER}
+      crontab -u root /tmp/cron.root && rm -rf /tmp/cron.root
       ;;
   esac
 }
