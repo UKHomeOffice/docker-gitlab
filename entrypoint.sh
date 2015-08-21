@@ -382,7 +382,7 @@ sudo -HEu ${GITLAB_USER} sed 's/{{GITLAB_BACKUP_ENCRYPTION_PASSPHRASE}}/'"${GITL
 sudo -HEu ${GITLAB_USER} sed 's/{{GITLAB_BACKUP_ENCRYPTION_UID}}/'"${GITLAB_BACKUP_ENCRYPTION_UID}"'/' -i config/gitlab.yml
 sudo -HEu ${GITLAB_USER} sed 's/{{GITLAB_MAX_SIZE}}/'"${GITLAB_MAX_SIZE}"'/' -i config/gitlab.yml
 sudo -HEu ${GITLAB_USER} sed 's/{{GITLAB_SSH_HOST}}/'"${GITLAB_SSH_HOST}"'/' -i config/gitlab.yml
-sudo -HEu ${GITLAB_USER} sed 's/{{GITLAB_SSH_PORT}}/'"${GITLAB_SSH_PORT}"'/' -i config/gitlab.yml
+sudo -HEu ${GITLAB_USER} sed 's/{{GITLAB_SSH_PORT}}/'"${GITLAB_SSH_PORT}"'/g' -i config/gitlab.yml
 
 # configure default timezone
 sudo -HEu ${GITLAB_USER} sed 's/{{GITLAB_TIMEZONE}}/'"${GITLAB_TIMEZONE}"'/' -i config/gitlab.yml
