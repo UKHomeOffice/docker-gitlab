@@ -29,13 +29,14 @@ module Backup
           abort 'Backup failed'
         end
         File.umask(orig_umask)
-        
+
         if Gitlab.config.backup.encryption.enabled == true
           encrypt(tar_file)
           upload(tar_file+'.gpg')
         else
           upload(tar_file)
         end
+        remove_old
       end
     end
 
@@ -46,7 +47,7 @@ module Backup
         $progress.puts "done".green
       else
           puts "Encrypting archive #{tar_file} failed".red
-          abort 'Encypting backup failed' 
+          abort 'Encypting backup failed'
       end
     end
 
@@ -85,7 +86,7 @@ module Backup
 
     def cleanup
       $progress.print "Deleting tmp directories ... "
-      
+
       backup_contents.each do |dir|
         next unless File.exist?(File.join(Gitlab.config.backup.path, dir))
 
@@ -105,7 +106,7 @@ module Backup
 
       if keep_time > 0
         removed = 0
-        
+
         Dir.chdir(Gitlab.config.backup.path) do
           file_list = Dir.glob('*_gitlab_backup.tar,*_gitlab_backup.tar.gpg')
           file_list.map! { |f| $1.to_i if f =~ /(\d+)_gitlab_backup.tar/ }
@@ -136,7 +137,7 @@ module Backup
         puts "rake gitlab:backup:restore BACKUP=timestamp_of_backup"
         exit 1
       end
-      
+
       tar_file = ENV["BACKUP"].nil? ? File.join("#{file_list.first}_gitlab_backup.tar") : File.join(ENV["BACKUP"] + "_gitlab_backup.tar")
 
       unless File.exists?(tar_file)
