@@ -108,12 +108,13 @@ module Backup
         removed = 0
 
         Dir.chdir(Gitlab.config.backup.path) do
-          file_list = Dir.glob('*_gitlab_backup.tar,*_gitlab_backup.tar.gpg')
+          file_list = Dir.glob('*_gitlab_backup.tar')
           file_list.map! { |f| $1.to_i if f =~ /(\d+)_gitlab_backup.tar/ }
           file_list.sort.each do |timestamp|
             if Time.at(timestamp) < (Time.now - keep_time)
-              if Kernel.system(*%W(rm #{timestamp}_gitlab_backup.tar))
-                removed += 1
+              removed += 1 if Kernel.system(*%W(rm #{timestamp}_gitlab_backup.tar))
+              if Gitlab.config.backup.encryption.enabled
+                removed += 1 if Kernel.system(*%W(rm #{timestamp}_gitlab_backup.tar.gpg))
               end
             end
           end
