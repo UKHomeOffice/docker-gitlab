@@ -4,4 +4,4 @@ services:
   - docker
 
 script:
-  - docker build -t quay.io/ukhomeofficedigital/gitlab:travis .
+  - docker build -t quay.io/ukhomeofficedigital/gitlab .
