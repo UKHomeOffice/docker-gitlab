@@ -10,7 +10,6 @@ RUN tar zxvf /tmp/s3cmd-1.6.0.tar -C /tmp && \
     cd /tmp/s3cmd-1.6.0 && \
     python setup.py install && \ 
     rm -rf /tmp/s3cmd-1.6.0cd && \
-    rm /etc/supervisor/conf.d/nginx.conf
 
 ADD bin/run.sh /run.sh
 ADD bin/kms_backup.sh /opt/bin/kms_backup.sh

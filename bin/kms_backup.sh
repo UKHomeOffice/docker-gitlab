@@ -12,7 +12,7 @@ if [ -f /etc/aws-environment ]; then
   . /etc/aws-environment
 fi
 
-BACKUP_DIR=${GITLAB_BACKUP_DIR:-/backups}
+BACKUP_DIR=${BACKUP_DIR:-/backups}
 AWS_BACKUP_REGION=${AWS_BACKUP_REGION:-"eu-west-1"}
 AWS_BACKUP_ACCESS_KEY_ID=${AWS_BACKUP_ACCESS_KEY_ID}
 AWS_BACKUP_SECRET_ACCESS_KEY=${AWS_BACKUP_SECRET_ACCESS_KEY}
