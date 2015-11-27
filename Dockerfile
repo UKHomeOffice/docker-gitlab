@@ -9,7 +9,7 @@ ADD http://sourceforge.net/projects/s3tools/files/s3cmd/1.6.0/s3cmd-1.6.0.tar.gz
 RUN tar zxvf /tmp/s3cmd-1.6.0.tar -C /tmp && \
     cd /tmp/s3cmd-1.6.0 && \
     python setup.py install && \ 
-    rm -rf /tmp/s3cmd-1.6.0cd && \
+    rm -rf /tmp/s3cmd-1.6.0
 
 ADD bin/run.sh /run.sh
 ADD bin/kms_backup.sh /opt/bin/kms_backup.sh
