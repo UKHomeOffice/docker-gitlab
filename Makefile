@@ -4,7 +4,7 @@
 #
 NAME=gitlab
 AUTHOR=gambol99
-TAG=8.2.1
+TAG=8.5.1
 
 .PHONY: build test
 
