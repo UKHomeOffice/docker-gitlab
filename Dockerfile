@@ -5,8 +5,8 @@ RUN apt update -y && \
     apt install -y python-setuptools && \
     rm -rf /var/lib/apt/lists/*
 
-ADD http://sourceforge.net/projects/s3tools/files/s3cmd/1.6.0/s3cmd-1.6.0.tar.gz/download /tmp/s3cmd-1.6.0.tar
-RUN tar zxvf /tmp/s3cmd-1.6.0.tar -C /tmp && \
+RUN curl -sL http://sourceforge.net/projects/s3tools/files/s3cmd/1.6.0/s3cmd-1.6.0.tar.gz/download -o /tmp/s3cmd-1.6.0.tar && \
+    tar zxvf /tmp/s3cmd-1.6.0.tar -C /tmp && \
     cd /tmp/s3cmd-1.6.0 && \
     python setup.py install && \ 
     rm -rf /tmp/s3cmd-1.6.0
