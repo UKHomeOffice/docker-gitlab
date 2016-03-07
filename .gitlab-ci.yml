@@ -22,8 +22,9 @@ deploy:
     - export VERSION=$CI_BUILD_TAG
     - '[[ "$VERSION" == "master" ]] && VERSION="latest"'
     - docker login -u ${REGISTRY_USER} -p ${REGISTRY_TOKEN} -e ${REGISTRY_EMAIL} ${REGISTRY}
-    - docker build -t ${REGISTRY}/${REGISTRY_AUTHOR}/${VERSION} .
-    - docker push ${REGISTRY}/${REGISTRY_AUTHOR}/${VERSION}
+    - docker build -t ${REGISTRY}/${REGISTRY_AUTHOR}:${VERSION} .
+    - docker push ${REGISTRY}/${REGISTRY_AUTHOR}:${VERSION}
+    - docker rmi ${REGISTRY}/${REGISTRY_AUTHOR}:${VERSION}
   only:
     - /^master$/
     - /^v([0-9]{1,3}[.]?){3}.*$/
