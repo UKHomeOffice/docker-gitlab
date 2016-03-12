@@ -1,0 +1,141 @@
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: gitlab
+  labels:
+    name: gitlab
+spec:
+  replicas: 1
+  selector:
+    name: gitlab
+  template:
+    metadata:
+      labels:
+        name: gitlab
+    spec:
+      containers:
+      - name: vault-sidekick
+        image: quay.io/ukhomeofficedigital/vault-sidekick:v0.0.4
+        args:
+          - -logtostderr=true
+          - -v=4
+          - -tls-skip-verify=true
+          - -auth=/etc/vault/vault-token.yml
+          - -output=/etc/secrets
+          - -cn=secret:platform/platform_tls/platform_tls:fmt=cert,file=platform_tls
+          - -cn=secret:gitlab/secrets/gitlab.env:fmt=env,file=gitlab.env
+        env:
+          - name: VAULT_ADDR
+            value: https://vault.platform.cluster.local:8200
+        volumeMounts:
+        - name: secrets
+          mountPath: /etc/secrets
+        - name: vault
+          mountPath: /etc/vault
+      - name: gitlab
+        image: quay.io/ukhomeofficedigital/docker-gitlab:v8.5.4-rc1
+        ports:
+        - containerPort: 22
+        - containerPort: 80
+        - containerPort: 443
+        env:
+        #- name: DEBUG
+        #  value: "true"
+        - name: DB_TYPE
+          value: mysql
+        - name: DB_HOST
+          value: mysql.gitlab.svc.cluster.local
+        - name: DB_NAME
+          value: gitlabhq
+        - name: DB_USER
+          value: admin
+        - name: DB_PASS
+          value: dfdsmfk983w
+        - name: REDIS_HOST
+          value: redis.gitlab.svc.cluster.local
+        - name: GITLAB_HOST
+          value: gitlab.digital.homeoffice.gov.uk
+        - name: GITLAB_PORT
+          value: "443"
+        - name: GITLAB_SSH_PORT
+          value: "2222"
+        - name: GITLAB_SHELL_SSH_PORT
+          value: "2222"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: GITLAB_EMAIL
+          value: gitlab@digital.homeoffice.gov.uk
+        - name: GITLAB_EMAIL_REPLY_TO
+          value: gitlab@digital.homeoffice.gov.uk
+        - name: GITLAB_SECRETS_DB_KEY_BASE
+          value: <GITLAB_SECRETS_DB_KEY_BASE>
+        - name: AWS_BACKUP_REGION
+          value: eu-west-1
+        - name: AWS_BACKUP_ACCESS_KEY_ID
+          value: <AWS_BACKUP_ACCESS_KEY_ID>
+        - name: AWS_BACKUP_SECRET_ACCESS_KEY
+          value: <AWS_BACKUP_SECRET_ACCESS_KEY>
+        - name: AWS_BACKUP_BUCKET
+          value: hod-commons-prod-gitlab-backup-eu-west-1
+        - name: AWS_BACKUP_KMS_ID
+          value: <AWS_BACKUP_KMS_ID>
+        - name: GITLAB_BACKUP_DIR
+          value: /home/git/data/backups
+        - name: GITLAB_KMS_BACKUPS
+          value: daily
+        - name: GITLAB_KMS_BACKUP_TIME
+          value: '*/2:00'
+        - name: AWS_BACKUP_FILTER
+          value: "*_gitlab_backup.tar"
+        - name: SMTP_HOST
+          value: email-smtp.eu-west-1.amazonaws.com
+        - name: SMTP_PORT
+          value: "465"
+        - name: SMTP_USER
+          value: <SMTP_USER_ACCESS_KEY>
+        - name: SMTP_PASS
+          value: <SMTP_PASS_SECRET_KEY>
+        - name: SMTP_DOMAIN
+          value: digital.homeoffice.gov.uk
+        - name: SMTP_TLS
+          value: "true"
+        - name: SMTP_STARTTLS
+          value: "false"
+        - name: GITLAB_HTTPS
+          value: "true"
+        - name: SSL_CERTIFICATE_PATH
+          value: /etc/secrets/platform_tls.crt
+        - name: SSL_KEY_PATH
+          value: /etc/secrets/platform_tls.key
+        - name: SSL_DHPARAM_PATH
+          value: /home/git/data/certs/dh.pem
+        livenessProbe:
+          httpGet:
+            path: /users/sign_in
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 300
+          timeoutSeconds: 5
+        volumeMounts:
+        - name: secrets
+          mountPath: /etc/secrets
+        - mountPath: /home/git/data
+          name: gitlab-data
+      volumes:
+      - name: vault
+        secret:
+          secretName: vault
+      - name: secrets
+        emptyDir: {}
+      - name: gitlab-data
+        cephfs:
+          monitors:
+          - 10.41.30.100:6789
+          - 10.41.31.100:6789
+          - 10.41.32.100:6789
+          path: /namespace/gitlab
+          user: admin
+          secretRef:
+            name: ceph-secret
+          readOnly: false

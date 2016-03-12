@@ -1,25 +1,23 @@
 #
-# 
 #  vim:ts=2:sw=2:et
 #
-NAME=gitlab
-AUTHOR=gambol99
-TAG=8.5.1
+NAME=docker-gitlab
+AUTHOR ?= ukhomeofficedigital
+REGISTRY ?= quay.io
+VERSION ?= 8.5.4
 
 .PHONY: build test
 
 default: build
 
 build:
-	sudo docker build -t ${AUTHOR}/${NAME}:${TAG} .
+	docker build -t ${REGISTRY}/${AUTHOR}/${NAME}:${VERSION} .
 
 push:
-	sudo docker tag -f ${AUTHOR}/${NAME}:${TAG} docker.io/${AUTHOR}/${NAME}:${TAG}
-	sudo docker push docker.io/${AUTHOR}/${NAME}:${TAG}
+	docker push ${REGISTRY}/${AUTHOR}/${NAME}:${VERSION}
 
 clean:
-  sudo docker rmi -f ${AUTHOR}/${NAME}:${TAG}
+	docker rmi -f ${REGISTRY}/${AUTHOR}/${NAME}:${VERSION}
 
 test:
-	sudo docker run -ti --rm -e --net=host ${AUTHOR}/${NAME}
-
+	docker run -ti --rm --net=host ${REGISTRY}/${AUTHOR}/${NAME}:${VERSION}

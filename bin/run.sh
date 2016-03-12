@@ -1,5 +1,12 @@
 #!/bin/bash
 
+GITLAB_ENV_FILE=${GITLAB_ENV_FILE:-""}
+
+# step: read in the gitlab enviroment file if there is one
+if [ -f ${GITLAB_ENV_FILE} ]; then
+  source ${GITLAB_ENV_FILE}
+fi
+
 cat > /etc/aws-environment << EOF
 BACKUP_DIR=${GITLAB_BACKUP_DIR:-/home/git/data/backups}
 AWS_BACKUP_REGION=${AWS_BACKUP_REGION:-"eu-west-1"}
@@ -19,8 +26,8 @@ case ${GITLAB_KMS_BACKUPS} in
     month=*
     day_of_week=*
     case ${GITLAB_KMS_BACKUPS} in
-      daily) ;;
-      weekly) day_of_week=0 ;;
+      daily)   ;;
+      weekly)  day_of_week=0   ;;
       monthly) day_of_month=01 ;;
     esac
     cat >> /tmp/cron.${GITLAB_USER} <<EOF
@@ -32,4 +39,4 @@ EOF
 esac
 
 # step: jump into the gitlab entrypoint
-exec /sbin/entrypoint.sh app:start
+bash /sbin/entrypoint.sh app:start
