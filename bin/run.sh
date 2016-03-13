@@ -39,4 +39,4 @@ EOF
 esac
 
 # step: jump into the gitlab entrypoint
-bash /sbin/entrypoint.sh app:start
+. /sbin/entrypoint.sh app:start
