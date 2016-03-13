@@ -4,7 +4,7 @@
 NAME=docker-gitlab
 AUTHOR ?= ukhomeofficedigital
 REGISTRY ?= quay.io
-VERSION ?= 8.5.4
+VERSION ?= latest
 
 .PHONY: build test
 
