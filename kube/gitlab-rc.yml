@@ -16,25 +16,26 @@ spec:
     spec:
       containers:
       - name: vault-sidekick
-        image: quay.io/ukhomeofficedigital/vault-sidekick:v0.0.4
+        image: quay.io/ukhomeofficedigital/vault-sidekick:v0.0.5
         args:
           - -logtostderr=true
           - -v=4
           - -tls-skip-verify=true
-          - -auth=/etc/vault/vault-token.yml
+          - -auth=/etc/vault/vault.yml
           - -output=/etc/secrets
           - -cn=secret:platform/platform_tls/platform_tls:fmt=cert,file=platform_tls
           - -cn=secret:gitlab/secrets/gitlab.env:fmt=env,file=gitlab.env
         env:
           - name: VAULT_ADDR
-            value: https://vault.platform.cluster.local:8200
+            value: https://vault.vault.svc.cluster.local:8200
         volumeMounts:
         - name: secrets
           mountPath: /etc/secrets
         - name: vault
           mountPath: /etc/vault
       - name: gitlab
-        image: quay.io/ukhomeofficedigital/docker-gitlab:v8.5.4-rc1
+        image: quay.io/ukhomeofficedigital/docker-gitlab:v8.5.5-rc1
+        imagePullPolicy: Always
         ports:
         - containerPort: 22
         - containerPort: 80

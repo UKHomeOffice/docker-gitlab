@@ -8,8 +8,8 @@ metadata:
 spec:
   ports:
   - name: redis
-    port: 2379
+    port: 6379
     protocol: TCP
-    targetPort: 2379
+    targetPort: 6379
   selector:
     name: redis
