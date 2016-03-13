@@ -27,8 +27,8 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/mysql
           name: gitlab-db
-      ports:
-      - containerPort: 3306
+        ports:
+        - containerPort: 3306
       volumes:
       - name: gitlab-db
         rbd:
