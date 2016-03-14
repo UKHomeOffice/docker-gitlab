@@ -25,6 +25,7 @@ spec:
           - -output=/etc/secrets
           - -cn=secret:platform/platform_tls/platform_tls:fmt=cert,file=platform_tls
           - -cn=secret:gitlab/secrets/gitlab.env:fmt=env,file=gitlab.env
+          - -cn=secret:gitlab/secrets/dhparams.pem:fmt=txt,file=dhparams.pem
         env:
           - name: VAULT_ADDR
             value: https://vault.vault.svc.cluster.local:8200
@@ -35,7 +36,6 @@ spec:
           mountPath: /etc/vault
       - name: gitlab
         image: quay.io/ukhomeofficedigital/docker-gitlab:v8.5.5-rc1
-        imagePullPolicy: Always
         ports:
         - containerPort: 22
         - containerPort: 80
@@ -112,19 +112,12 @@ spec:
         - name: SSL_KEY_PATH
           value: /etc/secrets/platform_tls.key
         - name: SSL_DHPARAM_PATH
-          value: /home/git/data/certs/dh.pem
-        livenessProbe:
-          httpGet:
-            path: /users/sign_in
-            port: 8080
-            scheme: HTTP
-          initialDelaySeconds: 300
-          timeoutSeconds: 5
+          value: /etc/secrets/dhparams.pem
         volumeMounts:
         - name: secrets
           mountPath: /etc/secrets
-        - mountPath: /home/git/data
-          name: gitlab-data
+        - name: gitlab-data
+          mountPath: /home/git/data
       volumes:
       - name: vault
         secret:
@@ -132,12 +125,15 @@ spec:
       - name: secrets
         emptyDir: {}
       - name: gitlab-data
-        cephfs:
+        rbd:
+          fsType: xfs
+          image: data_gitlab
           monitors:
           - 10.41.30.100:6789
           - 10.41.31.100:6789
           - 10.41.32.100:6789
-          user: admin
+          pool: rbd
+          keyring: ""
           secretRef:
             name: ceph-secret
-          readOnly: false
+          user: admin
