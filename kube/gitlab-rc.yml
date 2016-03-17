@@ -35,7 +35,7 @@ spec:
         - name: vault
           mountPath: /etc/vault
       - name: gitlab
-        image: quay.io/ukhomeofficedigital/docker-gitlab:v8.5.5-rc1
+        image: quay.io/ukhomeofficedigital/docker-gitlab:v8.5.5-rc2
         ports:
         - containerPort: 22
         - containerPort: 80
