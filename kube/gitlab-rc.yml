@@ -46,7 +46,7 @@ spec:
         - name: DB_TYPE
           value: mysql
         - name: DB_HOST
-          value: mysql.gitlab.svc.cluster.local
+          value: 127.0.0.1
         - name: DB_NAME
           value: gitlabhq
         - name: DB_USER
@@ -54,7 +54,7 @@ spec:
         - name: GITLAB_ENV_FILE
           value: /etc/secrets/gitlab.env
         - name: REDIS_HOST
-          value: redis.gitlab.svc.cluster.local
+          value: 127.0.0.1
         - name: GITLAB_HOST
           value: gitlab.digital.homeoffice.gov.uk
         - name: GITLAB_PORT
@@ -100,6 +100,20 @@ spec:
           mountPath: /etc/secrets
         - name: gitlab-data
           mountPath: /home/git/data
+      - name: redis
+        image: redis
+      - name: gitlab-mysql
+        image: tutum/mysql
+        env:
+        - name: MYSQL_USER
+          value: admin
+        - name: MYSQL_PASS
+          value: PASSWORD
+        - name: ON_CREATE_DB
+          value: gitlabhq
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: gitlab-db
       volumes:
       - name: vault
         secret:
@@ -110,6 +124,19 @@ spec:
         rbd:
           fsType: xfs
           image: data_gitlab
+          monitors:
+          - 10.41.30.100:6789
+          - 10.41.31.100:6789
+          - 10.41.32.100:6789
+          pool: rbd
+          keyring: ""
+          secretRef:
+            name: ceph-secret
+          user: admin
+      - name: gitlab-db
+        rbd:
+          fsType: xfs
+          image: mysql_gitlab
           monitors:
           - 10.41.30.100:6789
           - 10.41.31.100:6789
