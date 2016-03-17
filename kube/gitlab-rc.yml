@@ -51,8 +51,6 @@ spec:
           value: gitlabhq
         - name: DB_USER
           value: admin
-        #- name: DB_PASS
-        #  value: <PASSWORD>
         - name: GITLAB_ENV_FILE
           value: /etc/secrets/gitlab.env
         - name: REDIS_HOST
@@ -69,24 +67,12 @@ spec:
           value: "6379"
         - name: GITLAB_EMAIL
           value: gitlab@digital.homeoffice.gov.uk
-        #- name: GITLAB_EMAIL_REPLY_TO
-        #  value: gitlab@digital.homeoffice.gov.uk
-        #- name: GITLAB_SECRETS_DB_KEY_BASE
-        #  value: <GITLAB_SECRETS_DB_KEY_BASE>
-        #- name: AWS_BACKUP_REGION
-        #  value: eu-west-1
-        #- name: AWS_BACKUP_ACCESS_KEY_ID
-        #  value: <AWS_BACKUP_ACCESS_KEY_ID>
-        #- name: AWS_BACKUP_SECRET_ACCESS_KEY
-        #  value: <AWS_BACKUP_SECRET_ACCESS_KEY>
-        #- name: AWS_BACKUP_BUCKET
-        #  value: hod-commons-prod-gitlab-backup-eu-west-1
-        #- name: AWS_BACKUP_KMS_ID
-        #  value: <AWS_BACKUP_KMS_ID>
+        - name: GITLAB_KMS_BACKUPS
+          value: daily
+        - name: GITLAB_KMS_BACKUP_TIME
+          value: '*/2:00'
         - name: GITLAB_BACKUP_DIR
           value: /home/git/data/backups
-        #- name: GITLAB_KMS_BACKUPS
-        #  value: daily
         - name: GITLAB_KMS_BACKUP_TIME
           value: '*/2:00'
         - name: AWS_BACKUP_FILTER
@@ -95,10 +81,6 @@ spec:
           value: email-smtp.eu-west-1.amazonaws.com
         - name: SMTP_PORT
           value: "465"
-        #- name: SMTP_USER
-        #  value: <SMTP_USER_ACCESS_KEY>
-        #- name: SMTP_PASS
-        #  value: <SMTP_PASS_SECRET_KEY>
         - name: SMTP_DOMAIN
           value: digital.homeoffice.gov.uk
         - name: SMTP_TLS

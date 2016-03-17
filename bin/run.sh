@@ -3,7 +3,11 @@
 GITLAB_ENV_FILE=${GITLAB_ENV_FILE:-""}
 
 # step: read in the gitlab enviroment file if there is one
-if [ -f ${GITLAB_ENV_FILE} ]; then
+if [ -n "${GITLAB_ENV_FILE}" ]; then
+  # step: exit if the file is not there
+  if [ ! -f ${GITLAB_ENV_FILE} ]; then
+    echo "the enviroment file: ${GITLAB_ENV_FILE} not found"
+  fi
   source ${GITLAB_ENV_FILE}
 fi
 
