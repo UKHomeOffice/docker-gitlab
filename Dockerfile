@@ -1,4 +1,4 @@
-FROM sameersbn/gitlab:8.6.3
+FROM sameersbn/gitlab:8.6.4
 MAINTAINER Rohith <gambol99@gmail.com>
 
 RUN apt update -y && \
