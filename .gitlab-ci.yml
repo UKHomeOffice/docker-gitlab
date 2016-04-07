@@ -13,8 +13,8 @@ stages:
 build:
   stage: build
   script:
-    - docker build -t test.io/docker-gitlab:latest .
-    - docker rmi test.io/docker-gitlab:latest
+    - docker build -t test.io/docker-${NAME}:${CI_BUILD_ID} .
+    - docker rmi test.io/docker-${NAME}:${CI_BUILD_ID}
 
 deploy:
   stage: deploy
