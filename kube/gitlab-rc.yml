@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: vault-sidekick
-        image: quay.io/ukhomeofficedigital/vault-sidekick:v0.0.5
+        image: quay.io/ukhomeofficedigital/vault-sidekick:v0.0.9-2
         args:
           - -logtostderr=true
           - -v=4
@@ -35,7 +35,7 @@ spec:
         - name: vault
           mountPath: /etc/vault
       - name: gitlab
-        image: quay.io/ukhomeofficedigital/docker-gitlab:v8.5.5-rc2
+        image: quay.io/ukhomeofficedigital/docker-gitlab:v8.7.3
         ports:
         - containerPort: 22
         - containerPort: 80
