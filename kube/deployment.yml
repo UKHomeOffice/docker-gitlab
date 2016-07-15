@@ -1,0 +1,99 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: gitlab
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: gitlab
+    spec:
+      serviceAccount: gitlab
+      nodeSelector:
+        failure-domain.beta.kubernetes.io/zone: eu-west-1a
+      containers:
+      - name: vault-sidekick
+        image: quay.io/ukhomeofficedigital/vault-sidekick:v0.2.0
+        resources:
+          limits:
+            cpu: 100m
+            memory: 50Mi
+        args:
+          - -tls-skip-verify=true
+          - -cn=secret:services/gitlab/secrets/environment:fmt=env,file=gitlab.env
+          - -cn=secret:services/gitlab/secrets/platform_tls:fmt=cert,file=platform
+          - -cn=secret:services/gitlab/secrets/dhparams.pem:fmt=txt,file=dhparams.pem
+        env:
+        - name: VAULT_ADDR
+          value: https://vault.vault.svc.cluster.local:8200
+        - name: VAULT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: store-token
+              key: token
+        volumeMounts:
+        - name: secrets
+          mountPath: /etc/secrets
+      - name: gitlab
+        image: quay.io/ukhomeofficedigital/docker-gitlab:v8.9.6
+        resources:
+          limits:
+            cpu: 400m
+            memory: 3072Mi
+        ports:
+        - name: ssh
+          containerPort: 22
+        - name: http
+          containerPort: 80
+        - name: https
+          containerPort: 443
+        env:
+        # notes: most of the environment variable are filled in from the
+        # the gitlab.env file
+        - name: GITLAB_ENV_FILE
+          value: /etc/secrets/gitlab.env
+        - name: REDIS_HOST
+          value: 127.0.0.1
+        - name: REDIS_PORT
+          value: "6379"
+        - name: GITLAB_PORT
+          value: "443"
+        - name: GITLAB_SSH_PORT
+          value: "2222"
+        - name: GITLAB_SHELL_SSH_PORT
+          value: "2222"
+        - name: GITLAB_EMAIL
+          value: gitlab@digital.homeoffice.gov.uk
+        - name: GITLAB_KMS_BACKUPS
+          value: daily
+        - name: GITLAB_KMS_BACKUP_TIME
+          value: '*/3:00'
+        - name: GITLAB_BACKUP_DIR
+          value: /home/git/data/backups
+        - name: GITLAB_KMS_BACKUP_TIME
+          value: '*/3:00'
+        - name: AWS_BACKUP_FILTER
+          value: "*_gitlab_backup.tar"
+        - name: GITLAB_HTTPS
+          value: "true"
+        - name: SSL_CERTIFICATE_PATH
+          value: /etc/secrets/platform.crt
+        - name: SSL_KEY_PATH
+          value: /etc/secrets/platform.key
+        - name: SSL_DHPARAM_PATH
+          value: /etc/secrets/dhparams.pem
+        volumeMounts:
+        - name: secrets
+          mountPath: /etc/secrets
+        - name: gitlab-data
+          mountPath: /home/git/data
+      - name: redis
+        image: redis
+      volumes:
+      - name: secrets
+        emptyDir: {}
+      - name: gitlab-data
+        awsElasticBlockStore:
+          volumeID: vol-73d793f0
+          fsType: ext4
