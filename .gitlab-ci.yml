@@ -19,7 +19,7 @@ build:
 deploy:
   stage: deploy
   script:
-    - export VERSION=$CI_BUILD_TAG
+    - export VERSION=$CI_BUILD_REF_NAME
     - '[[ "$VERSION" == "master" ]] && VERSION="latest"'
     - docker login -u ${REGISTRY_USER} -p ${REGISTRY_TOKEN} -e ${REGISTRY_EMAIL} ${REGISTRY}
     - docker build -t ${REGISTRY}/${REGISTRY_AUTHOR}/${NAME}:${VERSION} .
