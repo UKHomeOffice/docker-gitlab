@@ -8,12 +8,15 @@ spec:
     metadata:
       labels:
         name: gitlab
+      annotations:
+        repository: https://gitlab.digital.homeoffice.gov.uk/docker/docker-gitlab
+        owner: rohith.jayawardene@digital.homeoffice.gov.uk
     spec:
       serviceAccount: gitlab
       nodeSelector:
         failure-domain.beta.kubernetes.io/zone: eu-west-1a
       containers:
-      - name: vault-sidekick
+      - name: vault
         image: quay.io/ukhomeofficedigital/vault-sidekick:v0.2.0
         resources:
           limits:
@@ -39,7 +42,7 @@ spec:
         image: quay.io/ukhomeofficedigital/docker-gitlab:v8.9.6
         resources:
           limits:
-            cpu: 400m
+            cpu: 600m
             memory: 3072Mi
         ports:
         - name: ssh
@@ -90,6 +93,10 @@ spec:
           mountPath: /home/git/data
       - name: redis
         image: redis
+        resources:
+          limits:
+            cpu: 100m
+            memory: 256Mi
       volumes:
       - name: secrets
         emptyDir: {}
