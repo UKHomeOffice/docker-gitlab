@@ -33,20 +33,28 @@ test:
 		--link=gitlab-mysql:mysql \
 		-p 8080:80 \
 		-p 8022:22 \
-		-e DEBUG=True \
+		-e DEBUG="true" \
 		-e GITLAB_ROOT_PASSWORD="password" \
 		-e GITLAB_TIMEZONE="UTC" \
-		-e GITLAB_HTTPS=false \
-		-e GITLAB_PORT=8080 \
-		-e GITLAB_SSH_PORT=8022 \
-		-e REDIS_HOST=redis \
-		-e REDIS_PORT=6379 \
-		-e GITLAB_SECRETS_DB_KEY_BASE=nH64ETWTZmatUucUPxC5min9vVYxRgkJ \
-		-e DB_ADAPTER=mysql2 \
-		-e DB_HOST=mysql \
-		-e DB_NAME=gitlab \
-		-e DB_USER=gitlab \
-		-e DB_PASS=password \
+		-e GITLAB_HTTPS="false" \
+		-e GITLAB_PORT="8080" \
+		-e GITLAB_SSH_PORT="8022" \
+		-e REDIS_HOST="redis" \
+		-e REDIS_PORT="6379" \
+		-e GITLAB_EMAIL="gitlab@digital.homeoffice.gov.uk" \
+		-e SMTP_HOST="email-smtp.eu-west-1.amazonaws.com" \
+		-e SMTP_PORT="587" \
+		-e SMTP_DOMAIN="digital.homeoffice.gov.uk" \
+		-e SMTP_TLS="false" \
+		-e SMTP_STARTTLS="true"\
+		-e SMTP_USER="FAKE" \
+		-e SMTP_PASS="FAKE" \
+		-e GITLAB_SECRETS_DB_KEY_BASE="nH64ETWTZmatUucUPxC5min9vVYxRgkJ" \
+		-e DB_ADAPTER="mysql2" \
+		-e DB_HOST="mysql" \
+		-e DB_NAME="gitlab" \
+		-e DB_USER="gitlab" \
+		-e DB_PASS="password" \
 		${REGISTRY}/${AUTHOR}/${NAME}:${VERSION} || true
 	@echo "--> Deleting the Redis service"
 	@docker kill gitlab-redis >/dev/null 2>&1
