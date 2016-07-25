@@ -39,10 +39,10 @@ spec:
         - name: secrets
           mountPath: /etc/secrets
       - name: gitlab
-        image: quay.io/ukhomeofficedigital/docker-gitlab:v8.9.6
+        image: quay.io/ukhomeofficedigital/docker-gitlab:v8.10.0
         resources:
           limits:
-            cpu: 600m
+            cpu: 1000m
             memory: 3072Mi
         ports:
         - name: ssh
@@ -95,7 +95,7 @@ spec:
         image: redis
         resources:
           limits:
-            cpu: 100m
+            cpu: 200m
             memory: 256Mi
       volumes:
       - name: secrets
