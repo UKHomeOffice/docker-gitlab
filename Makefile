@@ -1,5 +1,4 @@
 #
-#  vim:ts=2:sw=2:et
 #
 NAME=docker-gitlab
 AUTHOR ?= ukhomeofficedigital
@@ -55,6 +54,21 @@ test:
 		-e DB_NAME="gitlab" \
 		-e DB_USER="gitlab" \
 		-e DB_PASS="password" \
+		-e OAUTH_ENABLED="true" \
+		-e OAUTH_ALLOW_SSO="saml" \
+		-e OAUTH_BLOCK_AUTO_CREATED_USERS="true" \
+		-e OAUTH_AUTO_LINK_SAML_USER="true" \
+		-e OAUTH_EXTERNAL_PROVIDERS="saml" \
+		-e OAUTH_SAML_LABEL="HOD SSO" \
+		-e OAUTH_SAML_ASSERTION_CONSUMER_SERVICE_URL="http://localhost:8080/users/auth/saml/callback" \
+		-e OAUTH_SAML_IDP_CERT_FINGERPRINT="76:DE:5A:42:25:90:AA:36:B4:E4:40:6A:EE:45:15:D2:3D:5C:ED:4C" \
+		-e OAUTH_SAML_IDP_SSO_TARGET_URL="https://sso.digital.homeoffice.gov.uk/auth/realms/hod-ops/protocol/saml" \
+		-e OAUTH_SAML_ISSUER="gitlab" \
+		-e OAUTH_SAML_NAME_IDENTIFIER_FORMAT="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified" \
+		-e OAUTH_SAML_ATTRIBUTE_STATEMENTS_FIRST_NAME="urn:oid:2.5.4.42" \
+		-e OAUTH_SAML_ATTRIBUTE_STATEMENTS_LAST_NAME="urn:oid:2.5.4.4" \
+		-e OAUTH_SAML_ATTRIBUTE_STATEMENTS_NAME="urn:oid:2.5.4.42" \
+		-e OAUTH_SAML_ATTRIBUTE_STATEMENTS_EMAIL="urn:oid:1.2.840.113549.1.9.1" \
 		${REGISTRY}/${AUTHOR}/${NAME}:${VERSION} || true
 	@echo "--> Deleting the Redis service"
 	@docker kill gitlab-redis >/dev/null 2>&1
