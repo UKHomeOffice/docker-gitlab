@@ -101,9 +101,9 @@ spec:
       	- name: OAUTH_SAML_ASSERTION_CONSUMER_SERVICE_URL
           value: https://gitlab.digital.homeoffice.gov.uk/users/auth/saml/callback
       	- name: OAUTH_SAML_IDP_CERT_FINGERPRINT
-          value: 76:DE:5A:42:25:90:AA:36:B4:E4:40:6A:EE:45:15:D2:3D:5C:ED:4C
+          value: 13:48:89:9B:3C:19:94:9F:69:B9:61:38:A0:7A:DF:31:7D:79:A7:11
       	- name: OAUTH_SAML_IDP_SSO_TARGET_URL
-          value: https://sso.digital.homeoffice.gov.uk/auth/realms/hod-ops/protocol/saml
+          value: https://sso.digital.homeoffice.gov.uk/auth/realms/hod-ci/protocol/saml
       	- name: OAUTH_SAML_ISSUER
           value: gitlab
       	- name: OAUTH_SAML_NAME_IDENTIFIER_FORMAT
