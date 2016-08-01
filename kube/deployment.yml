@@ -73,7 +73,7 @@ spec:
         - name: GITLAB_KMS_BACKUP_TIME
           value: '*/3:00'
         - name: GITLAB_BACKUP_DIR
-          value: /home/git/data/backups
+          value: "/home/git/data/backups"
         - name: GITLAB_KMS_BACKUP_TIME
           value: '*/3:00'
         - name: AWS_BACKUP_FILTER
@@ -81,41 +81,41 @@ spec:
         - name: GITLAB_HTTPS
           value: "true"
         - name: SSL_CERTIFICATE_PATH
-          value: /etc/secrets/platform.crt
+          value: "/etc/secrets/platform.crt"
         - name: SSL_KEY_PATH
-          value: /etc/secrets/platform.key
+          value: "/etc/secrets/platform.key"
         - name: SSL_DHPARAM_PATH
-          value: /etc/secrets/dhparams.pem
+          value: "/etc/secrets/dhparams.pem"
         - name: OAUTH_ENABLED
-          value: true
-      	- name: OAUTH_ALLOW_SSO
-          value: saml
-      	- name: OAUTH_BLOCK_AUTO_CREATED_USERS
-          value: true
-      	- name: OAUTH_AUTO_LINK_SAML_USER
-          value: true
-      	- name: OAUTH_EXTERNAL_PROVIDERS
-          value: saml
-      	- name: OAUTH_SAML_LABEL
-          value: Office 365
-      	- name: OAUTH_SAML_ASSERTION_CONSUMER_SERVICE_URL
-          value: https://gitlab.digital.homeoffice.gov.uk/users/auth/saml/callback
-      	- name: OAUTH_SAML_IDP_CERT_FINGERPRINT
-          value: 13:48:89:9B:3C:19:94:9F:69:B9:61:38:A0:7A:DF:31:7D:79:A7:11
-      	- name: OAUTH_SAML_IDP_SSO_TARGET_URL
-          value: https://sso.digital.homeoffice.gov.uk/auth/realms/hod-ci/protocol/saml
-      	- name: OAUTH_SAML_ISSUER
-          value: gitlab
-      	- name: OAUTH_SAML_NAME_IDENTIFIER_FORMAT
-          value: urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified
-      	- name: OAUTH_SAML_ATTRIBUTE_STATEMENTS_FIRST_NAME
-          value: urn:oid:2.5.4.42
-      	- name: OAUTH_SAML_ATTRIBUTE_STATEMENTS_LAST_NAME
-          value: urn:oid:2.5.4.4
-      	- name: OAUTH_SAML_ATTRIBUTE_STATEMENTS_NAME
-          value: urn:oid:2.5.4.42
-      	- name: OAUTH_SAML_ATTRIBUTE_STATEMENTS_EMAIL
-          value: urn:oid:1.2.840.113549.1.9.1
+          value: "true"
+        - name: OAUTH_ALLOW_SSO
+          value: "saml"
+        - name: OAUTH_BLOCK_AUTO_CREATED_USERS
+          value: "true"
+        - name: OAUTH_AUTO_LINK_SAML_USER
+          value: "true"
+        - name: OAUTH_EXTERNAL_PROVIDERS
+          value: "saml"
+        - name: OAUTH_SAML_LABEL
+          value: "Office 365"
+        - name: OAUTH_SAML_ASSERTION_CONSUMER_SERVICE_URL
+          value: "https://gitlab.digital.homeoffice.gov.uk/users/auth/saml/callback"
+        - name: OAUTH_SAML_IDP_CERT_FINGERPRINT
+          value: "13:48:89:9B:3C:19:94:9F:69:B9:61:38:A0:7A:DF:31:7D:79:A7:11"
+        - name: OAUTH_SAML_IDP_SSO_TARGET_URL
+          value: "https://sso.digital.homeoffice.gov.uk/auth/realms/hod-ci/protocol/saml"
+        - name: OAUTH_SAML_ISSUER
+          value: "gitlab"
+        - name: OAUTH_SAML_NAME_IDENTIFIER_FORMAT
+          value: "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
+        - name: OAUTH_SAML_ATTRIBUTE_STATEMENTS_FIRST_NAME
+          value: "urn:oid:2.5.4.42"
+        - name: OAUTH_SAML_ATTRIBUTE_STATEMENTS_LAST_NAME
+          value: "urn:oid:2.5.4.4"
+        - name: OAUTH_SAML_ATTRIBUTE_STATEMENTS_NAME
+          value: "urn:oid:2.5.4.42"
+        - name: OAUTH_SAML_ATTRIBUTE_STATEMENTS_EMAIL
+          value: "urn:oid:1.2.840.113549.1.9.1"
         volumeMounts:
         - name: secrets
           mountPath: /etc/secrets
