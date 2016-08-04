@@ -26,4 +26,4 @@ deploy:
     - docker push ${REGISTRY}/${REGISTRY_AUTHOR}/${NAME}:${VERSION}
     - docker rmi ${REGISTRY}/${REGISTRY_AUTHOR}/${NAME}:${VERSION}
   only:
-    - tag
+    - /^v([0-9]{1,3}[.]?){3}.*$/
