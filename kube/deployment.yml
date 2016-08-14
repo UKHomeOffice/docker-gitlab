@@ -39,7 +39,7 @@ spec:
         - name: secrets
           mountPath: /etc/secrets
       - name: gitlab
-        image: quay.io/ukhomeofficedigital/docker-gitlab:v8.10.0
+        image: quay.io/ukhomeofficedigital/docker-gitlab:v8.10.2-1
         resources:
           limits:
             cpu: 1000m
