@@ -1,0 +1,32 @@
+pipeline:
+  building_image:
+    image: docker:1.11
+    environment:
+    - DOCKER_HOST=tcp://127.0.0.1:2375
+    commands:
+    - docker build -t gitlab:${DRONE_BUILD_NUMBER} .
+    when:
+      event: [push, pull_request]
+
+  deploy_image:
+    image: docker:1.11
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
+    commands:
+      - export VERSION=${DRONE_TAG}
+      - '[[ "$VERSION" == "master" ]] && VERSION="latest"'
+      - docker login -u="ukhomeofficedigital+drone" -p=${DOCKER_PASSWORD} quay.io
+      - docker tag gitlab:${DRONE_BUILD_NUMBER} quay.io/ukhomeofficedigital/gitlab:${VERSION}
+      - docker push quay.io/ukhomeofficedigital/gitlab:${VERSION}
+    when:
+      branch: master
+      event:
+      - tag
+
+services:
+  dind:
+    image: docker:1.11-dind
+    privileged: true
+    command:
+      - "-s"
+      - "overlay"
