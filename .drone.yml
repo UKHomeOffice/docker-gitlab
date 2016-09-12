@@ -21,7 +21,7 @@ pipeline:
     when:
       branch: master
       event:
-      - pull_request
+      - tag
 
 services:
   dind:
