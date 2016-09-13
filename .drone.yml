@@ -14,7 +14,7 @@ pipeline:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - NAME=docker-gitlab
       - REPO=quay.io
-      - AUTHOR=quay.io/ukhomeofficedigital
+      - AUTHOR=ukhomeofficedigital
       - REGISTRY_USER=ukhomeofficedigital+gitlab
     commands:
       - if [[ "${DRONE_BRANCH}" == "master" ]] || [[ -n "${DRONE_TAG}" ]]; then
