@@ -12,11 +12,15 @@ pipeline:
     image: docker:1.11
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
+      - NAME=docker-gitlab
+      - REPO=quay.io
+      - AUTHOR=quay.io/ukhomeofficedigital
+      - REGISTRY_USER=ukhomeofficedigital+gitlab
     commands:
       - if [[ "${DRONE_BRANCH}" == "master" ]] || [[ -n "${DRONE_TAG}" ]]; then
-        docker login -u="ukhomeofficedigital+gitlab" -p=${DOCKER_PASSWORD} quay.io;
-        docker tag gitlab:${DRONE_BUILD_NUMBER} quay.io/ukhomeofficedigital/gitlab:${DRONE_TAG:-latest};
-        docker push quay.io/ukhomeofficedigital/gitlab:${DRONE_TAG:-latest};
+        docker login -u="${REGISTRY_USER}" -p=${DOCKER_PASSWORD} ${REPO};
+        docker tag gitlab:${DRONE_BUILD_NUMBER} ${REPO}/${AUTHOR}/${NAME}:${DRONE_TAG:-latest};
+        docker push ${REPO}/${AUTHOR}/${NAME}:${DRONE_TAG:-latest};
         fi
 
 services:
