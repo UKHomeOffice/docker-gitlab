@@ -13,13 +13,12 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
     commands:
-      - export VERSION="${DRONE_TAG:-latest}"
-      - docker login -u="ukhomeofficedigital+drone" -p=${DOCKER_PASSWORD} quay.io
-      - docker tag gitlab:${DRONE_BUILD_NUMBER} quay.io/ukhomeofficedigital/gitlab:${VERSION}
-      - docker push quay.io/ukhomeofficedigital/gitlab:${VERSION}
-    when:
-      branch: master
-      event: [push, tag]
+      - if ([[ ${DRONE_BRANCH} == "master" ]] && [[ ${DRONE_PULL_REQUEST} != "true" ]]) || [[ -n ${DRONE_TAG} ]]; then
+        mkdir -p bin;
+        docker login -u="ukhomeofficedigital+gitlab" -p=${DOCKER_PASSWORD} quay.io;
+        docker tag gitlab:${DRONE_BUILD_NUMBER} quay.io/ukhomeofficedigital/gitlab:${DRONE_TAG:-latest};
+        docker push quay.io/ukhomeofficedigital/gitlab:${DRONE_TAG:-latest};
+        fi
 
 services:
   dind:
