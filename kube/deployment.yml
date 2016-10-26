@@ -12,7 +12,6 @@ spec:
         repository: https://gitlab.digital.homeoffice.gov.uk/docker/docker-gitlab
         owner: rohith.jayawardene@digital.homeoffice.gov.uk
     spec:
-      serviceAccount: gitlab
       nodeSelector:
         failure-domain.beta.kubernetes.io/zone: eu-west-1a
       containers:
@@ -39,7 +38,7 @@ spec:
         - name: secrets
           mountPath: /etc/secrets
       - name: gitlab
-        image: quay.io/ukhomeofficedigital/docker-gitlab:v8.12.7
+        image: quay.io/ukhomeofficedigital/docker-gitlab:v8.13.0
         resources:
           limits:
             cpu: 1000m
@@ -122,7 +121,7 @@ spec:
         - name: gitlab-data
           mountPath: /home/git/data
       - name: redis
-        image: redis
+        image: quay.io/ukhomeofficedigital/redis:latest
         resources:
           limits:
             cpu: 200m
