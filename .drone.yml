@@ -6,7 +6,7 @@ pipeline:
     commands:
     - docker build -t gitlab:${DRONE_BUILD_NUMBER} .
     when:
-      event: [push, pull_request]
+      event: [push, pull_request, tag]
 
   deploy_image:
     image: docker:1.11
