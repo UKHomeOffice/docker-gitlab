@@ -25,15 +25,17 @@ test:
 	@echo "--> Running the Redis service"
 	@docker run -d --name=gitlab-redis redis
 	@echo "--> Running the MySQL database"
-	@docker run -d --name=gitlab-mysql -e MYSQL_USER="gitlab" -e MYSQL_PASS="password" -e ON_CREATE_DB="gitlab" tutum/mysql
+	@docker run -d --name=gitlab-mysql \
+		-e MYSQL_ROOT_PASSWORD="password" \
+		-e MYSQL_DATABASE="gitlab" \
+		mariadb:latest
 	@echo "--> Running the Gitlab service, https://localhost:8080 + ssh://localhost:8022"
 	@docker run -ti --rm  \
 		--link=gitlab-redis:redis \
 		--link=gitlab-mysql:mysql \
-		-p 8080:80 \
+		-p 8080 \
 		-p 8022:22 \
 		-e DEBUG="true" \
-		-e GITLAB_ROOT_PASSWORD="password" \
 		-e GITLAB_TIMEZONE="UTC" \
 		-e GITLAB_HTTPS="false" \
 		-e GITLAB_PORT="8080" \
@@ -41,6 +43,8 @@ test:
 		-e REDIS_HOST="redis" \
 		-e REDIS_PORT="6379" \
 		-e GITLAB_EMAIL="gitlab@digital.homeoffice.gov.uk" \
+		-e GITLAB_SECRETS_SECRET_KEY_BASE=Qw9Jw9mhWFHoUT8bgwo3kvSghPJvUmClrQOi87Z8vzziHMijIlF74Q9lHc76PfnK \
+		-e GITLAB_SECRETS_OTP_KEY_BASE=QqltrpiLXxYIaRSSC9KPDbLNOFCybEJ6ZxcFMFzfpvhhOb9CJqfSpGePIyDgZGxE \
 		-e SMTP_HOST="email-smtp.eu-west-1.amazonaws.com" \
 		-e SMTP_PORT="587" \
 		-e SMTP_DOMAIN="digital.homeoffice.gov.uk" \
@@ -52,7 +56,7 @@ test:
 		-e DB_ADAPTER="mysql2" \
 		-e DB_HOST="mysql" \
 		-e DB_NAME="gitlab" \
-		-e DB_USER="gitlab" \
+		-e DB_USER="root" \
 		-e DB_PASS="password" \
 		-e OAUTH_ENABLED="true" \
 		-e OAUTH_ALLOW_SSO="saml" \

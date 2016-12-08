@@ -38,7 +38,7 @@ spec:
         - name: secrets
           mountPath: /etc/secrets
       - name: gitlab
-        image: quay.io/ukhomeofficedigital/docker-gitlab:v8.13.0
+        image: quay.io/ukhomeofficedigital/docker-gitlab:v8.13.5
         resources:
           limits:
             cpu: 1000m
@@ -75,6 +75,8 @@ spec:
           value: "/home/git/data/backups"
         - name: GITLAB_KMS_BACKUP_TIME
           value: '*/3:00'
+        - name: GITLAB_EMAIL_SUBJECT_SUFFIX
+          value: Gitlab
         - name: AWS_BACKUP_FILTER
           value: "*_gitlab_backup.tar"
         - name: GITLAB_HTTPS
