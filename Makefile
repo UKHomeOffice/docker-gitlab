@@ -23,24 +23,22 @@ clean:
 
 test:
 	@echo "--> Running the Redis service"
-	@docker run -d --name=gitlab-redis redis
+	@docker run -d --net=host --name=gitlab-redis redis
 	@echo "--> Running the MySQL database"
 	@docker run -d --name=gitlab-mysql \
+		--net=container:gitlab-redis \
 		-e MYSQL_ROOT_PASSWORD="password" \
 		-e MYSQL_DATABASE="gitlab" \
 		mariadb:latest
 	@echo "--> Running the Gitlab service, https://localhost:8080 + ssh://localhost:8022"
 	@docker run -ti --rm  \
-		--link=gitlab-redis:redis \
-		--link=gitlab-mysql:mysql \
-		-p 8080 \
-		-p 8022:22 \
+		--net=container:gitlab-redis \
 		-e DEBUG="true" \
 		-e GITLAB_TIMEZONE="UTC" \
 		-e GITLAB_HTTPS="false" \
 		-e GITLAB_PORT="8080" \
 		-e GITLAB_SSH_PORT="8022" \
-		-e REDIS_HOST="redis" \
+		-e REDIS_HOST="127.0.0.1" \
 		-e REDIS_PORT="6379" \
 		-e GITLAB_EMAIL="gitlab@digital.homeoffice.gov.uk" \
 		-e GITLAB_SECRETS_SECRET_KEY_BASE=Qw9Jw9mhWFHoUT8bgwo3kvSghPJvUmClrQOi87Z8vzziHMijIlF74Q9lHc76PfnK \
@@ -54,7 +52,7 @@ test:
 		-e SMTP_PASS="FAKE" \
 		-e GITLAB_SECRETS_DB_KEY_BASE="nH64ETWTZmatUucUPxC5min9vVYxRgkJ" \
 		-e DB_ADAPTER="mysql2" \
-		-e DB_HOST="mysql" \
+		-e DB_HOST="127.0.0.1" \
 		-e DB_NAME="gitlab" \
 		-e DB_USER="root" \
 		-e DB_PASS="password" \
