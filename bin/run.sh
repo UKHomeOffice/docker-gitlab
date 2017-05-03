@@ -1,6 +1,7 @@
 #!/bin/bash
 
 GITLAB_ENV_FILE=${GITLAB_ENV_FILE:-""}
+ENABLE_LOG_FILES=${ENABLE_LOG_FILES:=true}
 
 # step: read in the gitlab enviroment file if there is one
 if [ -n "${GITLAB_ENV_FILE}" ]; then
@@ -41,6 +42,11 @@ EOF
     rm -rf /tmp/cron.${GITLAB_USER}
     ;;
 esac
+
+if [[ $ENABLE_LOG_FILES == false ]]; then
+  echo "Removing the stdout logging"
+  rm -f /etc/supervisor/conf.d/logging.conf
+fi
 
 # step: jump into the gitlab entrypoint
 . /sbin/entrypoint.sh app:start
