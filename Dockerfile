@@ -1,4 +1,4 @@
-FROM quay.io/sameersbn/gitlab:9.1.1
+FROM quay.io/sameersbn/gitlab:9.1.2
 MAINTAINER Rohith <gambol99@gmail.com>
 
 RUN apt update -y && \
@@ -15,6 +15,6 @@ RUN curl -sL http://sourceforge.net/projects/s3tools/files/s3cmd/${S3CMD_VERSION
 
 ADD bin/run.sh /run.sh
 ADD bin/kms_backup.sh /opt/bin/kms_backup.sh
-ADD assets/logging.conf /etc/supervisor/conf.d/logging.conf 
+ADD assets/logging.conf /etc/supervisor/conf.d/logging.conf
 
 ENTRYPOINT [ "/run.sh" ]
