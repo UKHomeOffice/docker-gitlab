@@ -1,4 +1,4 @@
-FROM quay.io/sameersbn/gitlab:9.3.0
+FROM quay.io/sameersbn/gitlab:9.4.3
 MAINTAINER Rohith <gambol99@gmail.com>
 
 RUN apt update -y && \
