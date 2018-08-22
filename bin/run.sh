@@ -22,6 +22,12 @@ AWS_BACKUP_KMS_ID=${AWS_BACKUP_KMS_ID}
 AWS_BACKUP_FILTER=${AWS_BACKUP_FILTER:-"*_gitlab_backup.tar"}
 EOF
 
+SSHD_MAXSTARTUPS=${SSHD_MAXSTARTUPS:-""}
+
+if [[ -n "${SSHD_MAXSTARTUPS}" ]]; then
+  echo "MaxStartups ${SSHD_MAXSTARTUPS}" >> /etc/ssh/sshd_config
+fi
+
 # step: inject the custom backup cron
 case ${GITLAB_KMS_BACKUPS} in
   daily|weekly|monthly)
