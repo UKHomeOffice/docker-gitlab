@@ -1,4 +1,5 @@
-FROM quay.io/sameersbn/gitlab:11.1.4
+# Moved to fork until PR merged: https://github.com/sameersbn/docker-gitlab/pull/1766
+FROM quay.io/appvia/gitlab:v11.1.4-optional-backup-chmod
 MAINTAINER Rohith <gambol99@gmail.com>
 
 RUN apt update -y && \
