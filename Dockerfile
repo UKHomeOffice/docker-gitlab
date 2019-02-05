@@ -1,7 +1,8 @@
-FROM quay.io/sameersbn/gitlab:11.1.4
+FROM quay.io/sameersbn/gitlab:11.4.7
 MAINTAINER Rohith <gambol99@gmail.com>
 
-RUN apt update -y && \
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
+    apt update -y && \
     apt install -y python-setuptools && \
     rm -rf /var/lib/apt/lists/*
 
