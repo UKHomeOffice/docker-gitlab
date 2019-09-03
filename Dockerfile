@@ -1,8 +1,9 @@
-FROM sameersbn/gitlab:12.2.1-1
+FROM sameersbn/gitlab:12.2.5
 MAINTAINER Rohith <gambol99@gmail.com>
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
     apt update -y && \
+    apt upgrade -y && \
     apt install -y python-setuptools && \
     rm -rf /var/lib/apt/lists/*
 

@@ -8,6 +8,15 @@ pipeline:
     when:
       event: [pull_request, tag, push]
 
+  scan:
+    image: quay.io/ukhomeofficedigital/anchore-submission:latest
+    dockerfile: Dockerfile
+    image_name: gitlab:${DRONE_BUILD_NUMBER}
+    tolarates: medium
+    fail_on_detection: true
+    when:
+      event: push
+
   deploy_image:
     image: docker:17.07.0
     secrets:
