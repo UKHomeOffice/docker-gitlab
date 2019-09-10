@@ -1,4 +1,4 @@
-FROM quay.io/sameersbn/gitlab:11.4.7
+FROM sameersbn/gitlab:11.11.3
 MAINTAINER Rohith <gambol99@gmail.com>
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
