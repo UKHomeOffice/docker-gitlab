@@ -27,7 +27,7 @@ steps:
 - name: scan-image
   image: docker.digital.homeoffice.gov.uk/acp-anchore-submission:latest
   environment:
-    IMAGE_NAME: gitlab:$${DRONE_COMMIT_SHA}
+    IMAGE_NAME: gitlab:${DRONE_COMMIT_SHA}
     SERVICE_URL: http://anchore-submission-server:10080
 
 - name: deploy_image
