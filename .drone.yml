@@ -1,26 +1,77 @@
-pipeline:
-  building_image:
-    image: docker:17.07.0
-    environment:
-    - DOCKER_HOST=tcp://172.17.0.1:2375
-    commands:
-    - docker build -t gitlab:$${DRONE_BUILD_NUMBER} .
-    when:
-      event: [pull_request, tag, push]
+---
+kind: pipeline
+type: kubernetes
+name: default
 
-  deploy_image:
-    image: docker:17.07.0
-    secrets:
-      - docker_password
-    environment:
-      - DOCKER_HOST=tcp://172.17.0.1:2375
-      - NAME=docker-gitlab
-      - REPO=quay.io
-      - AUTHOR=ukhomeofficedigital
-      - REGISTRY_USER=ukhomeofficedigital+gitlab
-    commands:
-      - if [[ "$${DRONE_BRANCH}" == "master" ]] || [[ -n "$${DRONE_TAG}" ]]; then
-        docker login -u="$${REGISTRY_USER}" -p="$${DOCKER_PASSWORD}" $${REPO};
-        docker tag gitlab:$${DRONE_BUILD_NUMBER} $${REPO}/$${AUTHOR}/$${NAME}:$${DRONE_TAG:-latest};
-        docker push $${REPO}/$${AUTHOR}/$${NAME}:$${DRONE_TAG:-latest};
-        fi
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: build-image
+  pull: if-not-exists
+  image: docker:dind
+  commands:
+  # wait for docker service to be up before running docker build
+  - n=0; while [ "$n" -lt 60 ] && [ ! -e /var/run/docker.sock ]; do n=$(( n + 1 )); sleep 1; done
+  - docker build -t gitlab:$${DRONE_COMMIT_SHA} .
+  volumes:
+  - name: dockersock
+    path: /var/run
+  when:
+    event:
+    - pull_request
+    - tag
+    - push
+
+- name: deploy_image
+  pull: if-not-exists
+  image: docker:dind
+  commands:
+  - n=0; while [ "$n" -lt 60 ] && [ ! -e /var/run/docker.sock ]; do n=$(( n + 1 )); sleep 1; done
+  - if [[ "$${DRONE_BRANCH}" == "master" ]] || [[ -n "$${DRONE_TAG}" ]]; then
+    docker login -u="$${REGISTRY_USER}" -p="$${DOCKER_PASSWORD}" $${REPO};
+    docker tag gitlab:$${DRONE_COMMIT_SHA} $${REPO}/$${AUTHOR}/$${NAME}:$${DRONE_TAG:-latest};
+    docker push $${REPO}/$${AUTHOR}/$${NAME}:$${DRONE_TAG:-latest};
+    fi
+  volumes:
+    - name: dockersock
+      path: /var/run
+  environment:
+    AUTHOR: ukhomeofficedigital
+    DOCKER_PASSWORD:
+      from_secret: docker_password
+    NAME: docker-gitlab
+    REGISTRY_USER: ukhomeofficedigital+gitlab
+    REPO: quay.io
+  when:
+    event:
+    - tag
+
+- name: scan-image
+  image: docker.digital.homeoffice.gov.uk/acp-anchore-submission:latest
+  environment:
+    IMAGE_NAME: gitlab:${DRONE_COMMIT_SHA}
+    SERVICE_URL: http://anchore-submission-server:10080
+
+services:
+- name: docker
+  image: docker:dind
+  volumes:
+  - name: dockersock
+    path: /var/run
+
+- name: anchore-submission-server
+  image: docker.digital.homeoffice.gov.uk/acp-anchore-submission:latest
+  commands:
+    - /anchore-submission server
+  environment:
+    ANCHORE_URL: "acp-anchore.acp.homeoffice.gov.uk"
+    REGISTRY_URL: "acp-ephemeral-registry.acp.homeoffice.gov.uk"
+  volumes:
+  - name: dockersock
+    path: /var/run
+
+volumes:
+- name: dockersock
+  temp: {}
