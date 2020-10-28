@@ -44,6 +44,9 @@ steps:
     NAME: docker-gitlab
     REGISTRY_USER: ukhomeofficedigital+gitlab
     REPO: quay.io
+  when:
+    event:
+    - tag
 
 - name: scan-image
   image: docker.digital.homeoffice.gov.uk/acp-anchore-submission:latest
