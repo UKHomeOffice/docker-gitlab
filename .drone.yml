@@ -45,6 +45,7 @@ steps:
   pull: always
   environment:
     IMAGE_NAME: gitlab:${DRONE_COMMIT_SHA}
+    FAIL_ON_DETECTION: false
   when:
     event:
       exclude:
