@@ -12,7 +12,7 @@ steps:
   image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
   commands:
   # wait for docker service to be up before running docker build
-  - n=0; while [ "$n" -lt 60 ] && [ ! docker stats --no-stream ]; do n=$(( n + 1 )); sleep 1; done
+  - n=0; while [ "$n" -lt 60 ] && [ ! "$(docker stats --no-stream)" ]; do n=$(( n + 1 )); sleep 1; done
   - docker build -t gitlab:$${DRONE_COMMIT_SHA} .
   when:
     event:
@@ -20,10 +20,20 @@ steps:
     - tag
     - push
 
+- name: scan-image
+  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
+  pull: always
+  environment:
+    IMAGE_NAME: gitlab:${DRONE_COMMIT_SHA}
+    FAIL_ON_DETECTION: false
+  when:
+    event:
+      exclude:
+        - tag
+
 - name: deploy_image
   image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
   commands:
-  - n=0; while [ "$n" -lt 60 ] && [ ! docker stats --no-stream ]; do n=$(( n + 1 )); sleep 1; done
   - if [[ "$${DRONE_BRANCH}" == "master" ]] || [[ -n "$${DRONE_TAG}" ]]; then
     docker login -u="$${REGISTRY_USER}" -p="$${DOCKER_PASSWORD}" $${REPO};
     docker tag gitlab:$${DRONE_COMMIT_SHA} $${REPO}/$${AUTHOR}/$${NAME}:$${DRONE_TAG:-latest};
@@ -40,16 +50,6 @@ steps:
     event:
     - tag
 
-- name: scan-image
-  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
-  pull: always
-  environment:
-    IMAGE_NAME: gitlab:${DRONE_COMMIT_SHA}
-    FAIL_ON_DETECTION: false
-  when:
-    event:
-      exclude:
-        - tag
 services:
 - name: docker
   image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
@@ -59,3 +59,7 @@ services:
   pull: always
   commands:
     - /run.sh server
+  when:
+    event:
+      exclude:
+        - tag
