@@ -1,15 +1,15 @@
-FROM sameersbn/gitlab:14.1.1-1
+FROM sameersbn/gitlab:14.4.1
 LABEL Maintainer="Rohith <gambol99@gmail.com>"
 
 # Lets Encrypt root cert expired which causes apt update to fail due to a expired cert (https://github.com/nodesource/distributions/issues/1266#issuecomment-931550203). 
 # renaming the nodesource.list to .disabled, updating and installing the latest ca-certificates versions fixes this issue as it updates the certs
 # this should be able to be removed in later versions of the base-image
 
-RUN mv /etc/apt/sources.list.d/nodesource.list /etc/apt/sources.list.d/nodesource.list.disabled \
-    && apt update -y \
-    && apt install -y \
-         ca-certificates \
-    && mv /etc/apt/sources.list.d/nodesource.list.disabled /etc/apt/sources.list.d/nodesource.list
+# RUN mv /etc/apt/sources.list.d/nodesource.list /etc/apt/sources.list.d/nodesource.list.disabled \
+#     && apt update -y \
+#     && apt install -y \
+#          ca-certificates \
+#     && mv /etc/apt/sources.list.d/nodesource.list.disabled /etc/apt/sources.list.d/nodesource.list
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
     apt update -y && \
