@@ -6,6 +6,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
     apt install -y python3-setuptools && \
     rm -rf /var/lib/apt/lists/*
 
+ENV TEST hello
 ENV S3CMD_VERSION 2.2.0
 
 RUN curl -sL http://sourceforge.net/projects/s3tools/files/s3cmd/${S3CMD_VERSION}/s3cmd-${S3CMD_VERSION}.tar.gz/download -o /tmp/s3cmd-${S3CMD_VERSION}.tar && \
