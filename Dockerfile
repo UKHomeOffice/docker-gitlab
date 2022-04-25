@@ -1,4 +1,4 @@
-FROM sameersbn/gitlab:14.5.2
+FROM sameersbn/gitlab:14.6.3
 LABEL Maintainer="Rohith <gambol99@gmail.com>"
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
