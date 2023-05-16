@@ -13,7 +13,7 @@ steps:
   commands:
   # wait for docker service to be up before running docker build
   - n=0; while [ "$n" -lt 60 ] && [ ! "$(docker stats --no-stream)" ]; do n=$(( n + 1 )); sleep 1; done
-  - docker build -t gitlab:$${DRONE_COMMIT_SHA} .
+  - docker build -t arun-gitlab:$${DRONE_COMMIT_SHA} .
   when:
     event:
     - pull_request
@@ -24,7 +24,7 @@ steps:
   image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
   pull: always
   environment:
-    IMAGE_NAME: gitlab:${DRONE_COMMIT_SHA}
+    IMAGE_NAME: arun-gitlab:${DRONE_COMMIT_SHA}
     FAIL_ON_DETECTION: false
   when:
     event:
@@ -34,9 +34,10 @@ steps:
 - name: deploy_image
   image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
   commands:
-  - if [[ "$${DRONE_BRANCH}" == "master" ]] || [[ -n "$${DRONE_TAG}" ]]; then
+  - if [[ "$${DRONE_BRANCH}" == "ACPENG-624" ]] || [[ -n "$${DRONE_TAG}" ]]; then
+    echo "REPO"
     docker login -u="$${REGISTRY_USER}" -p="$${DOCKER_PASSWORD}" $${REPO};
-    docker tag gitlab:$${DRONE_COMMIT_SHA} $${REPO}/$${AUTHOR}/$${NAME}:$${DRONE_TAG:-latest};
+    docker tag arun-gitlab:$${DRONE_COMMIT_SHA} $${REPO}/$${AUTHOR}/$${NAME}:$${DRONE_TAG:-latest};
     docker push $${REPO}/$${AUTHOR}/$${NAME}:$${DRONE_TAG:-latest};
     fi
   environment:
