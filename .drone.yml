@@ -49,6 +49,7 @@ steps:
   when:
     event:
     - tag
+    - push
 
 services:
 - name: docker
