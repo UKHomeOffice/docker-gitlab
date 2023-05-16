@@ -20,16 +20,6 @@ steps:
     - tag
     - push
 
-- name: scan-image
-  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
-  pull: always
-  environment:
-    IMAGE_NAME: arun-gitlab:${DRONE_COMMIT_SHA}
-    FAIL_ON_DETECTION: false
-  when:
-    event:
-      exclude:
-        - tag
 
 - name: deploy_image
   image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
@@ -43,7 +33,7 @@ steps:
   environment:
     AUTHOR: ukhomeofficedigital
     DOCKER_PASSWORD:
-      from_secret: docker_password
+      from_secret: docker_gitlab_arun
     NAME: docker_gitlab_arun 
     REGISTRY_USER: ukhomeofficedigital+docker_gitlab_arun
     REPO: quay.io
@@ -52,16 +42,3 @@ steps:
     - tag
     - push
 
-services:
-- name: docker
-  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
-
-- name: anchore-submission-server
-  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/anchore-submission:latest
-  pull: always
-  commands:
-    - /run.sh server
-  when:
-    event:
-      exclude:
-        - tag
