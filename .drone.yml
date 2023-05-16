@@ -43,8 +43,8 @@ steps:
     AUTHOR: ukhomeofficedigital
     DOCKER_PASSWORD:
       from_secret: docker_password
-    NAME: docker-gitlab
-    REGISTRY_USER: ukhomeofficedigital+gitlab
+    NAME: docker_gitlab_arun 
+    REGISTRY_USER: ukhomeofficedigital+docker_gitlab_arun
     REPO: quay.io
   when:
     event:
