@@ -43,7 +43,7 @@
         AUTHOR: ukhomeofficedigital
         DOCKER_PASSWORD:
           from_secret: gitlab_arun_test
-        NAME: gitlab_arun_test
+        NAME: gitlab-arun-test
         REGISTRY_USER: ukhomeofficedigital+gitlab_arun_test
         REPO: quay.io
       when:
