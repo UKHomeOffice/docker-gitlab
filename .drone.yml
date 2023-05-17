@@ -42,9 +42,9 @@
       environment:
         AUTHOR: ukhomeofficedigital
         DOCKER_PASSWORD:
-          from_secret: docker_gitlab_arun
-        NAME: docker_gitlab_arun
-        REGISTRY_USER: ukhomeofficedigital+docker_gitlab_arun
+          from_secret: gitlab_arun_test
+        NAME: gitlab_arun_test
+        REGISTRY_USER: ukhomeofficedigital+gitlab_arun_test
         REPO: quay.io
       when:
         event:
@@ -64,4 +64,4 @@
         event:
           exclude:
             - tag
-    
+
