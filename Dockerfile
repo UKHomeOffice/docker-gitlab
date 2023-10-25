@@ -1,9 +1,9 @@
-FROM sameersbn/gitlab:16.3.5
+FROM sameersbn/gitlab:16.5.0
 LABEL Maintainer="Rohith <gambol99@gmail.com>"
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
     apt update -y && \
-    apt install -y python3-setuptools && \
+    apt install -y python3-setuptools tmux && \
     rm -rf /var/lib/apt/lists/*
 
 ENV S3CMD_VERSION 2.3.0
