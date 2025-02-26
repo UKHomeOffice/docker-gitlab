@@ -10,13 +10,5 @@
     create 0644 git git
 }
 
-/var/log/gitlab/gitlab/*.log !/var/log/gitlab/gitlab/api_json.log {
-    weekly
-    missingok
-    rotate 52
-    compress
-    delaycompress
-    notifempty
-    copytruncate
-}
+
 
