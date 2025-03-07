@@ -1,14 +1,9 @@
 /var/log/gitlab/gitlab/api_json.log {
-    size 1G
-    daily
+    size 1M    
     rotate 7
     compress
     delaycompress
     missingok
     notifempty
     copytruncate
-    create 0644 git git
 }
-
-
-
