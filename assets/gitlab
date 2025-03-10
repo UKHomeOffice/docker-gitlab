@@ -1,3 +1,4 @@
+# Configuration for the remaining logs, replacing *.log
 /var/log/gitlab/gitlab/production_json.log
 /var/log/gitlab/gitlab/application_json.log
 /var/log/gitlab/gitlab/graphql_json.log
