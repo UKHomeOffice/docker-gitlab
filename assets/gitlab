@@ -6,17 +6,4 @@
     delaycompress
     notifempty
     copytruncate
-    prerotate
-        # Prevent logrotate from rotating api_json.log
-        if [ -f /var/log/gitlab/gitlab/api_json.log ]; then
-            touch /tmp/api_json_excluded
-        fi
-    endscript
-    postrotate
-        # Clean up the exclusion marker
-        if [ -f /tmp/api_json_excluded ]; then
-            rm -f /tmp/api_json_excluded
-        fi
-    endscript
-}
 

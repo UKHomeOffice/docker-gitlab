@@ -17,7 +17,6 @@ RUN curl -sL http://sourceforge.net/projects/s3tools/files/s3cmd/${S3CMD_VERSION
 ADD bin/run.sh /run.sh
 ADD bin/kms_backup.sh /opt/bin/kms_backup.sh
 ADD assets/logging.conf /etc/supervisor/conf.d/logging.conf
-COPY assets/api_json /etc/logrotate.d
-COPY assets/gitlab /etc/logrotate.d
+COPY assets/api_json assets/gitlab /etc/logrotate.d/
 
 ENTRYPOINT [ "/run.sh" ]
