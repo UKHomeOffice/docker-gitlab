@@ -1,0 +1,9 @@
+/var/log/gitlab/gitlab/api_json.log {
+  size 1M
+  missingok
+  rotate 7
+  compress
+  delaycompress
+  notifempty
+  copytruncate
+}
