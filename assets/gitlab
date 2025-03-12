@@ -1,0 +1,13 @@
+/var/log/gitlab/gitlab/production_json.log
+/var/log/gitlab/gitlab/application_json.log
+/var/log/gitlab/gitlab/graphql_json.log
+/var/log/gitlab/gitlab/production.log
+/var/log/gitlab/gitlab/sidekiq_client.log {
+  weekly
+  missingok
+  rotate 52
+  compress
+  delaycompress
+  notifempty
+  copytruncate
+}
