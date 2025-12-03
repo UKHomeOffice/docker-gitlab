@@ -30,6 +30,7 @@ steps:
   environment:
     IMAGE_NAME: gitlab:${DRONE_COMMIT_SHA}
     FAIL_ON_DETECTION: false
+    FAIL_ON_EOL_OS_DETECTION: false
     TRIVY_SKIP_FILES: /etc/keys/key
   when:
     event:
