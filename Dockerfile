@@ -1,12 +1,13 @@
 FROM sameersbn/gitlab:17.5.5
 LABEL Maintainer="Rohith <gambol99@gmail.com>"
 
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
+RUN rm -f /etc/apt/sources.list.d/pgdg.list && \
+    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
     apt update -y && \
     apt install -y python3-setuptools && \
     rm -rf /var/lib/apt/lists/*
 
-ENV S3CMD_VERSION 2.3.0
+ENV S3CMD_VERSION=2.3.0
 
 RUN curl -sL http://sourceforge.net/projects/s3tools/files/s3cmd/${S3CMD_VERSION}/s3cmd-${S3CMD_VERSION}.tar.gz/download -o /tmp/s3cmd-${S3CMD_VERSION}.tar && \
     tar zxvf /tmp/s3cmd-${S3CMD_VERSION}.tar -C /tmp && \
