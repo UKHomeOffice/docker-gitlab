@@ -26,10 +26,6 @@ steps:
 
 - name: scan-image
   image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
-  resources:
-    limits:
-      cpu: 1000
-      memory: 2048Mi
   pull: always
   environment:
     IMAGE_NAME: gitlab:${DRONE_COMMIT_SHA}
