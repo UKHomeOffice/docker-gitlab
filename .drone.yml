@@ -65,4 +65,4 @@ services:
   resources:
     limits:
       cpu: 1000
-      memory: 1024Mi
+      memory: 2048Mi
