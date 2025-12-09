@@ -18,6 +18,10 @@ RUN curl -sL http://sourceforge.net/projects/s3tools/files/s3cmd/${S3CMD_VERSION
 ADD bin/run.sh /run.sh
 ADD bin/kms_backup.sh /opt/bin/kms_backup.sh
 ADD assets/logging.conf /etc/supervisor/conf.d/logging.conf
-COPY assets/logrotate_api_json /etc/logrotate.d
+# Custom log rotation. Important because otherwise logs accumulate and the node GitLab is on starts to evict pods
+# as a way to reclaim storage space.
+COPY assets/logrotate_gitlab /etc/logrotate.d/gitlab
+# Covered by the above (/etc/logrotate.d/gitlab).
+RUN rm -f /etc/logrotate.d/supervisord
 
 ENTRYPOINT [ "/run.sh" ]
