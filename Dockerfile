@@ -2,7 +2,8 @@ FROM sameersbn/gitlab:17.8.7
 LABEL Maintainer="Rohith <gambol99@gmail.com>"
 
 RUN rm -f /etc/apt/sources.list.d/pgdg.list && \
-    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
+    curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor -o /usr/share/keyrings/yarn-archive-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/yarn-archive-keyring.gpg] https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list && \
     apt update -y && \
     apt install -y python3-setuptools && \
     rm -rf /var/lib/apt/lists/*
