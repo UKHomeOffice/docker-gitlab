@@ -1,4 +1,4 @@
-FROM sameersbn/gitlab:17.11.7
+FROM sameersbn/gitlab:18.2.8
 LABEL Maintainer="Rohith <gambol99@gmail.com>"
 
 RUN rm -f /etc/apt/sources.list.d/pgdg.list && \
