@@ -13,7 +13,7 @@ RUN rm -f /etc/apt/sources.list.d/pgdg.list /etc/apt/sources.list.d/yarn.list &&
     tar xzf ruby.tar.gz && cd "ruby-${RUBY_VERSION}" && \
     for p in /tmp/ruby-patches/*.patch; do echo "Applying ${p}" && patch -p1 -i "${p}" || exit 1; done && \
     ./configure --disable-install-rdoc --enable-shared && \
-    make -j"$(nproc)" && \
+    make -j4 "libruby.so.${RUBY_VERSION}" && \
     mkdir /tmp/libruby && cp "libruby.so.${RUBY_VERSION}" /tmp/libruby/
 
 FROM sameersbn/gitlab:18.2.8
