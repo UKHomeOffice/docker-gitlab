@@ -61,5 +61,5 @@ services:
   image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
   resources:
     limits:
-      cpu: 1000
-      memory: 2048Mi
+      cpu: 4000
+      memory: 4096Mi

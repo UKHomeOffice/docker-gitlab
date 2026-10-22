@@ -1,5 +1,28 @@
+FROM sameersbn/gitlab:18.2.8 AS ruby-patched
+
+# Rebuild libruby with GitLab's regexp patches for CVE-2026-110264
+COPY patches/ruby/ /tmp/ruby-patches/
+RUN rm -f /etc/apt/sources.list.d/pgdg.list /etc/apt/sources.list.d/yarn.list && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
+      gcc g++ make patch libc6-dev zlib1g-dev libssl-dev libyaml-dev libgdbm-dev \
+      libreadline-dev libncurses5-dev libffi-dev && \
+    mkdir /tmp/ruby && cd /tmp/ruby && \
+    curl -fsSL -o ruby.tar.gz "https://cache.ruby-lang.org/pub/ruby/${RUBY_VERSION%.*}/ruby-${RUBY_VERSION}.tar.gz" && \
+    echo "${RUBY_SOURCE_SHA256SUM}  ruby.tar.gz" | sha256sum -c - && \
+    tar xzf ruby.tar.gz && cd "ruby-${RUBY_VERSION}" && \
+    for p in /tmp/ruby-patches/*.patch; do echo "Applying ${p}" && patch -p1 -i "${p}" || exit 1; done && \
+    ./configure --disable-install-rdoc --enable-shared && \
+    make -j4 "libruby.so.${RUBY_VERSION}" && \
+    mkdir /tmp/libruby && cp "libruby.so.${RUBY_VERSION}" /tmp/libruby/
+
 FROM sameersbn/gitlab:18.2.8
 LABEL Maintainer="Rohith <gambol99@gmail.com>"
+
+COPY --from=ruby-patched /tmp/libruby/ /usr/local/lib/
+# Fail the build if the patch isn't applied
+RUN ldconfig && ldd "$(command -v ruby)" | grep libruby && \
+    ruby -e 'begin; Regexp.new("(?:foobar){0,100}" * 100_000); rescue RegexpError => e; raise unless e.message.start_with?("too many range repeat"); puts "Onigmo patched"; else; abort "Onigmo NOT patched (CVE-2026-110264)"; end'
 
 RUN rm -f /etc/apt/sources.list.d/pgdg.list && \
     curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor -o /usr/share/keyrings/yarn-archive-keyring.gpg && \
