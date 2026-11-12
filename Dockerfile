@@ -1,4 +1,4 @@
-FROM sameersbn/gitlab:18.2.8 AS ruby-patched
+FROM sameersbn/gitlab:18.5.7 AS ruby-patched
 
 # Rebuild libruby with GitLab's regexp patches for CVE-2026-110264
 COPY patches/ruby/ /tmp/ruby-patches/
@@ -16,7 +16,7 @@ RUN rm -f /etc/apt/sources.list.d/pgdg.list /etc/apt/sources.list.d/yarn.list &&
     make -j4 "libruby.so.${RUBY_VERSION}" && \
     mkdir /tmp/libruby && cp "libruby.so.${RUBY_VERSION}" /tmp/libruby/
 
-FROM sameersbn/gitlab:18.2.8
+FROM sameersbn/gitlab:18.5.7
 LABEL Maintainer="Rohith <gambol99@gmail.com>"
 
 COPY --from=ruby-patched /tmp/libruby/ /usr/local/lib/
